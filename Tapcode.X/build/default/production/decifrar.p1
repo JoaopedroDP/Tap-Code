@@ -1,0 +1,531 @@
+Version 4.0 HI-TECH Software Intermediate Code
+"16 ./lcd.h
+[; ;./lcd.h: 16: void lcd_dat(unsigned char val);
+[v _lcd_dat `(v ~T0 @X0 0 ef1`uc ]
+"18
+[; ;./lcd.h: 18: void lcd_set_cursor(unsigned char line, unsigned char col);
+[v _lcd_set_cursor `(v ~T0 @X0 0 ef2`uc`uc ]
+"17
+[; ;./lcd.h: 17: void lcd_str(const char* str);
+[v _lcd_str `(v ~T0 @X0 0 ef1`*Cuc ]
+"15
+[; ;./lcd.h: 15: void lcd_cmd(unsigned char val);
+[v _lcd_cmd `(v ~T0 @X0 0 ef1`uc ]
+"9 ./teclado.h
+[; ;./teclado.h: 9: unsigned char tc_tecla();
+[v _tc_tecla `(uc ~T0 @X0 0 e? ]
+"38 ./config.h
+[p x MCLRE=ON ]
+"39
+[p x OSC=HS ]
+"40
+[p x WDT=OFF ]
+"41
+[p x LVP=OFF ]
+"42
+[p x DEBUG = OFF ]
+"43
+[p x WDTPS = 1 ]
+"10 decifrar.c
+[; ;decifrar.c: 10: unsigned char input_atual[2] = {0, 0};
+[v _input_atual `uc ~T0 @X0 -> 2 `i e ]
+[i _input_atual
+:U ..
+-> -> 0 `i `uc
+-> -> 0 `i `uc
+..
+]
+"12
+[; ;decifrar.c: 12: unsigned char input_ant[2] = {0, 0};
+[v _input_ant `uc ~T0 @X0 -> 2 `i e ]
+[i _input_ant
+:U ..
+-> -> 0 `i `uc
+-> -> 0 `i `uc
+..
+]
+"13
+[; ;decifrar.c: 13: char input_num = 0;
+[v _input_num `uc ~T0 @X0 1 e ]
+[i _input_num
+-> -> 0 `i `uc
+]
+"16
+[; ;decifrar.c: 16: int buzzer_delay = 0;
+[v _buzzer_delay `i ~T0 @X0 1 e ]
+[i _buzzer_delay
+-> 0 `i
+]
+"19
+[; ;decifrar.c: 19: void start_buzzer() {
+[v _start_buzzer `(v ~T0 @X0 1 ef ]
+{
+[e :U _start_buzzer ]
+[f ]
+"20
+[; ;decifrar.c: 20:     (*(volatile __near unsigned char*)0xF82) &= ~0b10;
+[e =& *U -> -> 3970 `i `*VNuc -> ~ -> 2 `i `uc ]
+"21
+[; ;decifrar.c: 21:     buzzer_delay = 6;
+[e = _buzzer_delay -> 6 `i ]
+"22
+[; ;decifrar.c: 22: }
+[e :UE 1 ]
+}
+"25
+[; ;decifrar.c: 25: unsigned char cursor = 0;
+[v _cursor `uc ~T0 @X0 1 e ]
+[i _cursor
+-> -> 0 `i `uc
+]
+"31
+[; ;decifrar.c: 31: void add_char(unsigned char c) {
+[v _add_char `(v ~T0 @X0 1 ef1`uc ]
+{
+[e :U _add_char ]
+[v _c `uc ~T0 @X0 1 r1 ]
+[f ]
+"33
+[; ;decifrar.c: 33:     static char linha_buffer[17] = "                ";
+[v F22 `uc ~T0 @X0 -> 17 `i s linha_buffer ]
+[i F22
+:U ..
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 32 `c
+-> 0 `c
+..
+]
+"35
+[; ;decifrar.c: 35:     if (cursor < 16) {
+[e $ ! < -> _cursor `i -> 16 `i 3  ]
+{
+"36
+[; ;decifrar.c: 36:         lcd_dat(c);
+[e ( _lcd_dat (1 _c ]
+"37
+[; ;decifrar.c: 37:         cursor += 1;
+[e =+ _cursor -> -> 1 `i `uc ]
+"38
+[; ;decifrar.c: 38:         if (cursor == 16) {
+[e $ ! == -> _cursor `i -> 16 `i 4  ]
+{
+"39
+[; ;decifrar.c: 39:             lcd_set_cursor(1, 0);
+[e ( _lcd_set_cursor (2 , -> -> 1 `i `uc -> -> 0 `i `uc ]
+"40
+[; ;decifrar.c: 40:         }
+}
+[e :U 4 ]
+"41
+[; ;decifrar.c: 41:     } else {
+}
+[e $U 5  ]
+[e :U 3 ]
+{
+"42
+[; ;decifrar.c: 42:         linha_buffer[cursor - 16] = c;
+[e = *U + &U F22 * -> -> - -> _cursor `i -> 16 `i `ui `ux -> -> # *U &U F22 `ui `ux -> _c `uc ]
+"43
+[; ;decifrar.c: 43:         lcd_dat(c);
+[e ( _lcd_dat (1 _c ]
+"44
+[; ;decifrar.c: 44:         cursor += 1;
+[e =+ _cursor -> -> 1 `i `uc ]
+"45
+[; ;decifrar.c: 45:         if (cursor == 32) {
+[e $ ! == -> _cursor `i -> 32 `i 6  ]
+{
+"46
+[; ;decifrar.c: 46:             lcd_set_cursor(0, 0);
+[e ( _lcd_set_cursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"47
+[; ;decifrar.c: 47:             lcd_str(linha_buffer);
+[e ( _lcd_str (1 -> &U F22 `*Cuc ]
+"48
+[; ;decifrar.c: 48:             lcd_set_cursor(1, 0);
+[e ( _lcd_set_cursor (2 , -> -> 1 `i `uc -> -> 0 `i `uc ]
+"49
+[; ;decifrar.c: 49:             lcd_str("                ");
+[e ( _lcd_str (1 :s 1C ]
+"50
+[; ;decifrar.c: 50:             lcd_set_cursor(1, 0);
+[e ( _lcd_set_cursor (2 , -> -> 1 `i `uc -> -> 0 `i `uc ]
+"51
+[; ;decifrar.c: 51:             cursor = 16;
+[e = _cursor -> -> 16 `i `uc ]
+"52
+[; ;decifrar.c: 52:         }
+}
+[e :U 6 ]
+"53
+[; ;decifrar.c: 53:     }
+}
+[e :U 5 ]
+"54
+[; ;decifrar.c: 54: }
+[e :UE 2 ]
+}
+"58
+[; ;decifrar.c: 58: void displayNum(unsigned int number, unsigned int b, int tempo) {
+[v _displayNum `(v ~T0 @X0 1 ef3`ui`ui`i ]
+{
+[e :U _displayNum ]
+[v _number `ui ~T0 @X0 1 r1 ]
+[v _b `ui ~T0 @X0 1 r2 ]
+[v _tempo `i ~T0 @X0 1 r3 ]
+[f ]
+[v F27 `ui ~T0 @X0 -> 16 `i s ]
+[i F27
+:U ..
+"59
+[; ;decifrar.c: 59:     unsigned int values7seg[] = {
+-> -> 63 `i `ui
+-> -> 6 `i `ui
+-> -> 91 `i `ui
+-> -> 79 `i `ui
+-> -> 102 `i `ui
+-> -> 109 `i `ui
+-> -> 125 `i `ui
+-> -> 7 `i `ui
+-> -> 127 `i `ui
+-> -> 103 `i `ui
+-> -> 119 `i `ui
+-> -> 124 `i `ui
+-> -> 57 `i `ui
+-> -> 94 `i `ui
+-> -> 121 `i `ui
+-> -> 113 `i `ui
+..
+]
+[v _values7seg `ui ~T0 @X0 -> 16 `i a ]
+[e = _values7seg F27 ]
+"77
+[; ;decifrar.c: 77:     (*(volatile __near unsigned char*)0xF92) = 0x00;
+[e = *U -> -> 3986 `i `*VNuc -> -> 0 `i `uc ]
+"78
+[; ;decifrar.c: 78:     (*(volatile __near unsigned char*)0xF95) = 0x00;
+[e = *U -> -> 3989 `i `*VNuc -> -> 0 `i `uc ]
+"79
+[; ;decifrar.c: 79:     int i, j, d;
+[v _i `i ~T0 @X0 1 a ]
+[v _j `i ~T0 @X0 1 a ]
+[v _d `i ~T0 @X0 1 a ]
+"80
+[; ;decifrar.c: 80:     for(i = 0; i<tempo;) {
+{
+[e = _i -> 0 `i ]
+[e $U 11  ]
+[e :U 8 ]
+{
+"81
+[; ;decifrar.c: 81:         d = 5;
+[e = _d -> 5 `i ]
+"82
+[; ;decifrar.c: 82:         int n = number;
+[v _n `i ~T0 @X0 1 a ]
+[e = _n -> _number `i ]
+"83
+[; ;decifrar.c: 83:         do {
+[e :U 14 ]
+{
+"84
+[; ;decifrar.c: 84:             if (n%b!=0) {
+[e $ ! != % -> _n `ui _b -> -> 0 `i `ui 15  ]
+{
+"85
+[; ;decifrar.c: 85:                 (*(volatile __near unsigned char*)0xF80) = 0;
+[e = *U -> -> 3968 `i `*VNuc -> -> 0 `i `uc ]
+"86
+[; ;decifrar.c: 86:                 (*(volatile __near unsigned char*)0xF83) = values7seg[n%b];
+[e = *U -> -> 3971 `i `*VNuc -> *U + &U _values7seg * -> % -> _n `ui _b `ux -> -> # *U &U _values7seg `ui `ux `uc ]
+"87
+[; ;decifrar.c: 87:                 (*(volatile __near unsigned char*)0xF80) = 1 << d;
+[e = *U -> -> 3968 `i `*VNuc -> << -> 1 `i _d `uc ]
+"88
+[; ;decifrar.c: 88:                 for(j = 0; j < 40; j++);
+{
+[e = _j -> 0 `i ]
+[e $ < _j -> 40 `i 16  ]
+[e $U 17  ]
+[e :U 16 ]
+[e ++ _j -> 1 `i ]
+[e $ < _j -> 40 `i 16  ]
+[e :U 17 ]
+}
+"89
+[; ;decifrar.c: 89:             }
+}
+[e :U 15 ]
+"90
+[; ;decifrar.c: 90:             n = n / b;
+[e = _n -> / -> _n `ui _b `i ]
+"91
+[; ;decifrar.c: 91:             d--;
+[e -- _d -> 1 `i ]
+"92
+[; ;decifrar.c: 92:             i++;
+[e ++ _i -> 1 `i ]
+"93
+[; ;decifrar.c: 93:         } while(n > 0 && d >= 2);
+}
+[e $ && > _n -> 0 `i >= _d -> 2 `i 14  ]
+[e :U 13 ]
+"94
+[; ;decifrar.c: 94:     }
+}
+[e :U 11 ]
+[e $ < _i _tempo 8  ]
+[e :U 9 ]
+}
+"95
+[; ;decifrar.c: 95:     (*(volatile __near unsigned char*)0xF80) = 0;
+[e = *U -> -> 3968 `i `*VNuc -> -> 0 `i `uc ]
+"96
+[; ;decifrar.c: 96: }
+[e :UE 7 ]
+}
+"99
+[; ;decifrar.c: 99: void limpar_dados() {
+[v _limpar_dados `(v ~T0 @X0 1 ef ]
+{
+[e :U _limpar_dados ]
+[f ]
+"100
+[; ;decifrar.c: 100:     input_atual[0] = 0;
+[e = *U + &U _input_atual * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_atual `ui `ux -> -> 0 `i `uc ]
+"101
+[; ;decifrar.c: 101:     input_atual[1] = 0;
+[e = *U + &U _input_atual * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_atual `ui `ux -> -> 0 `i `uc ]
+"102
+[; ;decifrar.c: 102:     input_ant[0] = 0;
+[e = *U + &U _input_ant * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_ant `ui `ux -> -> 0 `i `uc ]
+"103
+[; ;decifrar.c: 103:     input_ant[1] = 0;
+[e = *U + &U _input_ant * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_ant `ui `ux -> -> 0 `i `uc ]
+"104
+[; ;decifrar.c: 104:     cursor = 0;
+[e = _cursor -> -> 0 `i `uc ]
+"105
+[; ;decifrar.c: 105:     lcd_cmd(0x01);
+[e ( _lcd_cmd (1 -> -> 1 `i `uc ]
+"106
+[; ;decifrar.c: 106:     buzzer_delay = 0;
+[e = _buzzer_delay -> 0 `i ]
+"107
+[; ;decifrar.c: 107:     (*(volatile __near unsigned char*)0xF82) |= 0b10;
+[e =| *U -> -> 3970 `i `*VNuc -> -> 2 `i `uc ]
+"108
+[; ;decifrar.c: 108: }
+[e :UE 19 ]
+}
+"116
+[; ;decifrar.c: 116: void ler_input() {
+[v _ler_input `(v ~T0 @X0 1 ef ]
+{
+[e :U _ler_input ]
+[f ]
+"117
+[; ;decifrar.c: 117:     (*(volatile __near unsigned char*)0xF95) = 0x0F;
+[e = *U -> -> 3989 `i `*VNuc -> -> 15 `i `uc ]
+"118
+[; ;decifrar.c: 118:     int a = tc_tecla();
+[v _a `i ~T0 @X0 1 a ]
+[e = _a -> ( _tc_tecla ..  `i ]
+"119
+[; ;decifrar.c: 119:     (*(volatile __near unsigned char*)0xF95) = 0x00;
+[e = *U -> -> 3989 `i `*VNuc -> -> 0 `i `uc ]
+"120
+[; ;decifrar.c: 120:     if (a > 0 && a <= 5) {
+[e $ ! && > _a -> 0 `i <= _a -> 5 `i 21  ]
+{
+"121
+[; ;decifrar.c: 121:         if (input_num == 0) {
+[e $ ! == -> _input_num `i -> 0 `i 22  ]
+{
+"122
+[; ;decifrar.c: 122:             input_ant[0] = input_atual[0];
+[e = *U + &U _input_ant * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_ant `ui `ux *U + &U _input_atual * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_atual `ui `ux ]
+"123
+[; ;decifrar.c: 123:             input_ant[1] = input_atual[1];
+[e = *U + &U _input_ant * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_ant `ui `ux *U + &U _input_atual * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_atual `ui `ux ]
+"124
+[; ;decifrar.c: 124:             input_atual[1] = 0;
+[e = *U + &U _input_atual * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_atual `ui `ux -> -> 0 `i `uc ]
+"125
+[; ;decifrar.c: 125:         }
+}
+[e :U 22 ]
+"126
+[; ;decifrar.c: 126:         start_buzzer();
+[e ( _start_buzzer ..  ]
+"127
+[; ;decifrar.c: 127:         input_atual[input_num] = a;
+[e = *U + &U _input_atual * -> _input_num `ux -> -> # *U &U _input_atual `ui `ux -> _a `uc ]
+"128
+[; ;decifrar.c: 128:         input_num++;
+[e ++ _input_num -> -> 1 `i `uc ]
+"129
+[; ;decifrar.c: 129:     } else if (a == 12) {
+}
+[e $U 23  ]
+[e :U 21 ]
+[e $ ! == _a -> 12 `i 24  ]
+{
+"130
+[; ;decifrar.c: 130:         limpar_dados();
+[e ( _limpar_dados ..  ]
+"131
+[; ;decifrar.c: 131:     }
+}
+[e :U 24 ]
+[e :U 23 ]
+"132
+[; ;decifrar.c: 132: }
+[e :UE 20 ]
+}
+"136
+[; ;decifrar.c: 136: void display_input() {
+[v _display_input `(v ~T0 @X0 1 ef ]
+{
+[e :U _display_input ]
+[f ]
+"137
+[; ;decifrar.c: 137:     displayNum(input_ant[0]*1000 + input_ant[1]*100 + input_atual[0]*10 + input_atual[1], 10, 25);
+[e ( _displayNum (3 , , -> + + + * -> *U + &U _input_ant * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_ant `ui `ux `i -> 1000 `i * -> *U + &U _input_ant * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_ant `ui `ux `i -> 100 `i * -> *U + &U _input_atual * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_atual `ui `ux `i -> 10 `i -> *U + &U _input_atual * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_atual `ui `ux `i `ui -> -> 10 `i `ui -> 25 `i ]
+"138
+[; ;decifrar.c: 138: }
+[e :UE 25 ]
+}
+"142
+[; ;decifrar.c: 142: int decifrar() {
+[v _decifrar `(i ~T0 @X0 1 ef ]
+{
+[e :U _decifrar ]
+[f ]
+[v F39 `Cuc ~T0 @X0 -> 5 `i t ]
+"144
+[; ;decifrar.c: 144:     const static unsigned char polibiouSquare[5][5] = {
+[v F38 `F39 ~T0 @X0 -> 5 `i s polibiouSquare ]
+[i F38
+:U ..
+:U ..
+-> -> 65 `ui `uc
+-> -> 66 `ui `uc
+-> -> 67 `ui `uc
+-> -> 68 `ui `uc
+-> -> 69 `ui `uc
+..
+:U ..
+-> -> 70 `ui `uc
+-> -> 71 `ui `uc
+-> -> 72 `ui `uc
+-> -> 73 `ui `uc
+-> -> 74 `ui `uc
+..
+:U ..
+-> -> 76 `ui `uc
+-> -> 77 `ui `uc
+-> -> 78 `ui `uc
+-> -> 79 `ui `uc
+-> -> 80 `ui `uc
+..
+:U ..
+-> -> 81 `ui `uc
+-> -> 82 `ui `uc
+-> -> 83 `ui `uc
+-> -> 84 `ui `uc
+-> -> 85 `ui `uc
+..
+:U ..
+-> -> 86 `ui `uc
+-> -> 87 `ui `uc
+-> -> 88 `ui `uc
+-> -> 89 `ui `uc
+-> -> 90 `ui `uc
+..
+..
+]
+"152
+[; ;decifrar.c: 152:     limpar_dados();
+[e ( _limpar_dados ..  ]
+"154
+[; ;decifrar.c: 154:     for (;;) {
+{
+[e :U 27 ]
+{
+"157
+[; ;decifrar.c: 157:         while (input_num != 2) {
+[e $U 30  ]
+[e :U 31 ]
+{
+"158
+[; ;decifrar.c: 158:             display_input();
+[e ( _display_input ..  ]
+"159
+[; ;decifrar.c: 159:             ler_input();
+[e ( _ler_input ..  ]
+"161
+[; ;decifrar.c: 161:             if (buzzer_delay > 0) {
+[e $ ! > _buzzer_delay -> 0 `i 33  ]
+{
+"162
+[; ;decifrar.c: 162:                 buzzer_delay--;
+[e -- _buzzer_delay -> 1 `i ]
+"163
+[; ;decifrar.c: 163:                 if (buzzer_delay == 0) {
+[e $ ! == _buzzer_delay -> 0 `i 34  ]
+{
+"164
+[; ;decifrar.c: 164:                     (*(volatile __near unsigned char*)0xF82) |= 0b10;
+[e =| *U -> -> 3970 `i `*VNuc -> -> 2 `i `uc ]
+"165
+[; ;decifrar.c: 165:                 }
+}
+[e :U 34 ]
+"166
+[; ;decifrar.c: 166:             }
+}
+[e :U 33 ]
+"167
+[; ;decifrar.c: 167:         }
+}
+[e :U 30 ]
+"157
+[; ;decifrar.c: 157:         while (input_num != 2) {
+[e $ != -> _input_num `i -> 2 `i 31  ]
+[e :U 32 ]
+"168
+[; ;decifrar.c: 168:         input_num = 0;
+[e = _input_num -> -> 0 `i `uc ]
+"170
+[; ;decifrar.c: 170:         add_char(polibiouSquare[input_atual[0]-1][input_atual[1]-1]);
+[e ( _add_char (1 *U + &U *U + &U F38 * -> -> - -> *U + &U _input_atual * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_atual `ui `ux `i -> 1 `i `ui `ux -> * -> # *U &U *U &U F38 `ui -> -> 5 `i `ui `ux * -> -> - -> *U + &U _input_atual * -> -> -> 1 `i `ui `ux -> -> # *U &U _input_atual `ui `ux `i -> 1 `i `ui `ux -> -> # *U &U *U + &U F38 * -> -> - -> *U + &U _input_atual * -> -> -> 0 `i `ui `ux -> -> # *U &U _input_atual `ui `ux `i -> 1 `i `ui `ux -> * -> # *U &U *U &U F38 `ui -> -> 5 `i `ui `ux `ui `ux ]
+"171
+[; ;decifrar.c: 171:     }
+}
+[e $U 27  ]
+[e :U 28 ]
+}
+"173
+[; ;decifrar.c: 173:     return 0;
+[e ) -> 0 `i ]
+[e $UE 26  ]
+"174
+[; ;decifrar.c: 174: }
+[e :UE 26 ]
+}
+[a 1C 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 0 ]

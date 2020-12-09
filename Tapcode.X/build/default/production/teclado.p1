@@ -1,0 +1,216 @@
+Version 4.0 HI-TECH Software Intermediate Code
+"4 ./delay.h
+[; ;./delay.h: 4: void atraso_ms(int t);
+[v _atraso_ms `(v ~T0 @X0 0 ef1`i ]
+"10 teclado.c
+[; ;teclado.c: 10: const unsigned char coluna[3] = {0x1, 0x2, 0x4};
+[v _coluna `Cuc ~T0 @X0 -> 3 `i e ]
+[i _coluna
+:U ..
+-> -> 1 `i `uc
+-> -> 2 `i `uc
+-> -> 4 `i `uc
+..
+]
+"11
+[; ;teclado.c: 11: unsigned int atraso_min = 5;
+[v _atraso_min `ui ~T0 @X0 1 e ]
+[i _atraso_min
+-> -> 5 `i `ui
+]
+"12
+[; ;teclado.c: 12: unsigned int atraso = 15;
+[v _atraso `ui ~T0 @X0 1 e ]
+[i _atraso
+-> -> 15 `i `ui
+]
+"19
+[; ;teclado.c: 19: unsigned char tc_tecla() {
+[v _tc_tecla `(uc ~T0 @X0 1 ef ]
+{
+[e :U _tc_tecla ]
+[f ]
+"20
+[; ;teclado.c: 20:     unsigned char i;
+[v _i `uc ~T0 @X0 1 a ]
+"21
+[; ;teclado.c: 21:     unsigned char ret = 0;
+[v _ret `uc ~T0 @X0 1 a ]
+[e = _ret -> -> 0 `i `uc ]
+"22
+[; ;teclado.c: 22:     unsigned char tmp = (*(volatile __near unsigned char*)0xF81);
+[v _tmp `uc ~T0 @X0 1 a ]
+[e = _tmp *U -> -> 3969 `i `*VNuc ]
+"24
+[; ;teclado.c: 24:     for (i = 0; i < 3; i++) {
+{
+[e = _i -> -> 0 `i `uc ]
+[e $ < -> _i `i -> 3 `i 2  ]
+[e $U 3  ]
+[e :U 2 ]
+{
+"25
+[; ;teclado.c: 25:         (*(volatile __near unsigned char*)0xF81) = ~coluna[i];
+[e = *U -> -> 3969 `i `*VNuc -> ~ -> *U + &U _coluna * -> _i `ux -> -> # *U &U _coluna `ui `ux `i `uc ]
+"26
+[; ;teclado.c: 26:         atraso_ms(atraso_min);
+[e ( _atraso_ms (1 -> _atraso_min `i ]
+"27
+[; ;teclado.c: 27:         if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<3))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 3 `i -> 0 `i 5  ]
+{
+"28
+[; ;teclado.c: 28:             atraso_ms(atraso);
+[e ( _atraso_ms (1 -> _atraso `i ]
+"29
+[; ;teclado.c: 29:             if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<3))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 3 `i -> 0 `i 6  ]
+{
+"30
+[; ;teclado.c: 30:                 while (!(((*(volatile __near unsigned char*)0xF83)) & (1<<3)));
+[e $U 7  ]
+[e :U 8 ]
+[e :U 7 ]
+[e $ ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 3 `i -> 0 `i 8  ]
+[e :U 9 ]
+"31
+[; ;teclado.c: 31:                 ret = 1 + i;
+[e = _ret -> + -> 1 `i -> _i `i `uc ]
+"32
+[; ;teclado.c: 32:                 break;
+[e $U 3  ]
+"33
+[; ;teclado.c: 33:             }
+}
+[e :U 6 ]
+"34
+[; ;teclado.c: 34:         };
+}
+[e :U 5 ]
+"35
+[; ;teclado.c: 35:         if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<2))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 2 `i -> 0 `i 10  ]
+{
+"36
+[; ;teclado.c: 36:             atraso_ms(atraso);
+[e ( _atraso_ms (1 -> _atraso `i ]
+"37
+[; ;teclado.c: 37:             if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<2))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 2 `i -> 0 `i 11  ]
+{
+"38
+[; ;teclado.c: 38:                 while (!(((*(volatile __near unsigned char*)0xF83)) & (1<<2)));
+[e $U 12  ]
+[e :U 13 ]
+[e :U 12 ]
+[e $ ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 2 `i -> 0 `i 13  ]
+[e :U 14 ]
+"39
+[; ;teclado.c: 39:                 ret = 4 + i;
+[e = _ret -> + -> 4 `i -> _i `i `uc ]
+"40
+[; ;teclado.c: 40:                 break;
+[e $U 3  ]
+"41
+[; ;teclado.c: 41:             }
+}
+[e :U 11 ]
+"42
+[; ;teclado.c: 42:         };
+}
+[e :U 10 ]
+"43
+[; ;teclado.c: 43:         if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<1))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 1 `i -> 0 `i 15  ]
+{
+"44
+[; ;teclado.c: 44:             atraso_ms(atraso);
+[e ( _atraso_ms (1 -> _atraso `i ]
+"45
+[; ;teclado.c: 45:             if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<1))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 1 `i -> 0 `i 16  ]
+{
+"46
+[; ;teclado.c: 46:                 while (!(((*(volatile __near unsigned char*)0xF83)) & (1<<1)));
+[e $U 17  ]
+[e :U 18 ]
+[e :U 17 ]
+[e $ ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 1 `i -> 0 `i 18  ]
+[e :U 19 ]
+"47
+[; ;teclado.c: 47:                 ret = 7 + i;
+[e = _ret -> + -> 7 `i -> _i `i `uc ]
+"48
+[; ;teclado.c: 48:                 break;
+[e $U 3  ]
+"49
+[; ;teclado.c: 49:             }
+}
+[e :U 16 ]
+"50
+[; ;teclado.c: 50:         };
+}
+[e :U 15 ]
+"51
+[; ;teclado.c: 51:         if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<0))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 0 `i -> 0 `i 20  ]
+{
+"52
+[; ;teclado.c: 52:             atraso_ms(atraso);
+[e ( _atraso_ms (1 -> _atraso `i ]
+"53
+[; ;teclado.c: 53:             if (!(((*(volatile __near unsigned char*)0xF83)) & (1<<0))) {
+[e $ ! ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 0 `i -> 0 `i 21  ]
+{
+"54
+[; ;teclado.c: 54:                 while (!(((*(volatile __near unsigned char*)0xF83)) & (1<<0)));
+[e $U 22  ]
+[e :U 23 ]
+[e :U 22 ]
+[e $ ! != & -> *U -> -> 3971 `i `*VNuc `i << -> 1 `i -> 0 `i -> 0 `i 23  ]
+[e :U 24 ]
+"55
+[; ;teclado.c: 55:                 ret = 10 + i;
+[e = _ret -> + -> 10 `i -> _i `i `uc ]
+"56
+[; ;teclado.c: 56:                 break;
+[e $U 3  ]
+"57
+[; ;teclado.c: 57:             }
+}
+[e :U 21 ]
+"58
+[; ;teclado.c: 58:         };
+}
+[e :U 20 ]
+"59
+[; ;teclado.c: 59:         (*(volatile __near unsigned char*)0xF81) = 0x0;
+[e = *U -> -> 3969 `i `*VNuc -> -> 0 `i `uc ]
+"60
+[; ;teclado.c: 60:     };
+}
+[e ++ _i -> -> 1 `i `uc ]
+[e $ < -> _i `i -> 3 `i 2  ]
+[e :U 3 ]
+}
+"62
+[; ;teclado.c: 62:     if (!ret)ret = 255;
+[e $ ! ! != -> _ret `i -> 0 `i 25  ]
+[e = _ret -> -> 255 `i `uc ]
+[e :U 25 ]
+"63
+[; ;teclado.c: 63:     if (ret == 11)ret = 0;
+[e $ ! == -> _ret `i -> 11 `i 26  ]
+[e = _ret -> -> 0 `i `uc ]
+[e :U 26 ]
+"64
+[; ;teclado.c: 64:     (*(volatile __near unsigned char*)0xF81) = tmp;
+[e = *U -> -> 3969 `i `*VNuc _tmp ]
+"65
+[; ;teclado.c: 65:     return ret;
+[e ) _ret ]
+[e $UE 1  ]
+"66
+[; ;teclado.c: 66: }
+[e :UE 1 ]
+}
